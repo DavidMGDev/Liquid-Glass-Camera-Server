@@ -7,10 +7,20 @@ const http = require('http');
  */
 function createHttpServer(wss) {
     const NODE_ENV = process.env.NODE_ENV || 'development';
+    const allowedOrigins = [
+        'https://liquid-glass-camera-client-b2brhedefac9fpfd.chilecentral-01.azurewebsites.net',
+        'http://localhost:3000',
+        'http://localhost:5000'
+    ];
 
     return http.createServer((req, res) => {
-        // Habilitar CORS para despliegues en la nube como Azure
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        const origin = req.headers.origin;
+        
+        // Solo permitir orígenes específicos
+        if (allowedOrigins.includes(origin)) {
+            res.setHeader('Access-Control-Allow-Origin', origin);
+        }
+        
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
         res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
